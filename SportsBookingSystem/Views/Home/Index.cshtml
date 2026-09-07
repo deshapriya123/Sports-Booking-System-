@@ -1,0 +1,380 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="sbs-home">
+
+    <!-- ============ HERO ============ -->
+    <section class="sbs-hero">
+        <div class="sbs-hero-glow"></div>
+        <div class="container-xl">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 reveal">
+                    <p class="sbs-eyebrow">Community Sports, Booked In Seconds</p>
+                    <h1 class="sbs-hero-title">Your Court.<br />Your Time.<br />Your Game.</h1>
+                    <p class="sbs-hero-sub">
+                        Search real-time availability across tennis, basketball, football,
+                        badminton and swimming facilities near you &mdash; then lock in your
+                        slot before someone else does.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+                        <a asp-controller="Facility" asp-action="Search" class="btn sbs-btn-accent btn-lg">Find a Facility</a>
+                        <a asp-controller="Account" asp-action="Register" class="btn sbs-btn-outline btn-lg">Create Free Account</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 reveal">
+                    <div class="sbs-ring-stage">
+                        <div class="sbs-ring-tilt">
+                            <div class="sbs-ring">
+                                <div class="sbs-ring-card" style="--i:0;"><span class="sbs-ring-icon">@Html.Raw(IconTennis)</span><span>Tennis</span></div>
+                                <div class="sbs-ring-card" style="--i:1;"><span class="sbs-ring-icon">@Html.Raw(IconBasketball)</span><span>Basketball</span></div>
+                                <div class="sbs-ring-card" style="--i:2;"><span class="sbs-ring-icon">@Html.Raw(IconFootball)</span><span>Football</span></div>
+                                <div class="sbs-ring-card" style="--i:3;"><span class="sbs-ring-icon">@Html.Raw(IconBadminton)</span><span>Badminton</span></div>
+                                <div class="sbs-ring-card" style="--i:4;"><span class="sbs-ring-icon">@Html.Raw(IconSwim)</span><span>Swimming</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SCOREBOARD STATS ============ -->
+    <section class="sbs-stats reveal">
+        <div class="container-xl">
+            <div class="row text-center g-4">
+                <div class="col-6 col-md-3">
+                    <div class="sbs-stat-num">05</div>
+                    <div class="sbs-stat-label">Sports Covered</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="sbs-stat-num">12+</div>
+                    <div class="sbs-stat-label">Facilities Listed</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="sbs-stat-num">00</div>
+                    <div class="sbs-stat-label">Double-Bookings</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="sbs-stat-num">24/7</div>
+                    <div class="sbs-stat-label">Online Booking</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="container-xl sbs-section reveal">
+        <h2 class="sbs-section-title text-center">How It Works</h2>
+        <div class="row g-4 mt-2">
+            <div class="col-md-4">
+                <div class="sbs-step">
+                    <span class="sbs-step-num">01</span>
+                    <h3 class="sbs-step-title">Search</h3>
+                    <p>Filter by sport, location and availability to find a facility that fits your schedule.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="sbs-step">
+                    <span class="sbs-step-num">02</span>
+                    <h3 class="sbs-step-title">Book</h3>
+                    <p>Pick your date and time slot. We check for conflicts instantly, so your booking is guaranteed.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="sbs-step">
+                    <span class="sbs-step-num">03</span>
+                    <h3 class="sbs-step-title">Play</h3>
+                    <p>Show up and play. Leave a review afterwards to help the next member choose well.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SPORTS GRID ============ -->
+    <section class="sbs-pitch-section reveal">
+        <div class="container-xl">
+            <h2 class="sbs-section-title text-center sbs-on-dark">Browse By Sport</h2>
+            <div class="row g-4 mt-2">
+                <div class="col-6 col-md-4 col-lg-2-4">
+                    <a class="sport-card" href="/Facility/Search?sportId=1">
+                        <span class="sport-card-icon">@Html.Raw(IconTennis)</span>
+                        <span class="sport-card-name">Tennis</span>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2-4">
+                    <a class="sport-card" href="/Facility/Search?sportId=2">
+                        <span class="sport-card-icon">@Html.Raw(IconBasketball)</span>
+                        <span class="sport-card-name">Basketball</span>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2-4">
+                    <a class="sport-card" href="/Facility/Search?sportId=3">
+                        <span class="sport-card-icon">@Html.Raw(IconFootball)</span>
+                        <span class="sport-card-name">Football</span>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2-4">
+                    <a class="sport-card" href="/Facility/Search?sportId=4">
+                        <span class="sport-card-icon">@Html.Raw(IconBadminton)</span>
+                        <span class="sport-card-name">Badminton</span>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2-4">
+                    <a class="sport-card" href="/Facility/Search?sportId=5">
+                        <span class="sport-card-icon">@Html.Raw(IconSwim)</span>
+                        <span class="sport-card-name">Swimming</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CTA BANNER ============ -->
+    <section class="container-xl sbs-section reveal">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="sbs-cta sbs-cta-lime">
+                    <h3>New here?</h3>
+                    <p>Create a free account and start booking in under a minute.</p>
+                    <a asp-controller="Account" asp-action="Register" class="btn sbs-btn-accent">Sign Up</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="sbs-cta sbs-cta-dark">
+                    <h3>Just have a question?</h3>
+                    <p>No account needed &mdash; send us a message and we'll get back to you.</p>
+                    <a asp-controller="Guest" asp-action="Inquiry" class="btn sbs-btn-outline-dark">Ask a Question</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+@functions {
+    string IconTennis => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M8 12c6 4 6 20 0 24M40 12c-6 4-6 20 0 24' stroke='currentColor' stroke-width='2.5'/></svg>";
+    string IconBasketball => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M24 5v38M5 24h38M10 10c9 6 9 22 0 28M38 10c-9 6-9 22 0 28' stroke='currentColor' stroke-width='2.5'/></svg>";
+    string IconFootball => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M24 13l7 5-3 8h-8l-3-8 7-5zM24 13V6M31 18l6-3M31 26l5 4M17 18l-6-3M17 26l-5 4M20 26l-3 7M28 26l3 7' stroke='currentColor' stroke-width='2'/></svg>";
+    string IconBadminton => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><ellipse cx='24' cy='12' rx='6' ry='5' stroke='currentColor' stroke-width='2.5'/><path d='M19 15l-9 24M24 16v25M29 15l9 24M16 33h16' stroke='currentColor' stroke-width='2.5'/></svg>";
+    string IconSwim => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 18c4-4 8 4 12 0s8-4 12 0 8 4 12 0M6 28c4-4 8 4 12 0s8-4 12 0 8 4 12 0M6 38c4-4 8 4 12 0s8-4 12 0 8 4 12 0' stroke='currentColor' stroke-width='2.5' stroke-linecap='round'/></svg>";
+}
+
+<style>
+    .sbs-home { overflow-x: clip; }
+
+    /* ---------- Hero ---------- */
+    .sbs-hero {
+        position: relative;
+        background: radial-gradient(ellipse at 20% 20%, var(--pitch-green-soft) 0%, var(--pitch-black) 65%);
+        color: var(--chalk);
+        padding: 5.5rem 0 6rem;
+        overflow: hidden;
+    }
+    .sbs-hero-glow {
+        position: absolute; inset: 0;
+        background:
+            radial-gradient(circle at 85% 15%, rgba(212,255,63,0.18), transparent 40%),
+            radial-gradient(circle at 90% 70%, rgba(47,168,224,0.15), transparent 45%);
+        pointer-events: none;
+    }
+    .sbs-eyebrow {
+        font-family: var(--font-mono);
+        color: var(--line-lime);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: .8rem;
+        margin-bottom: .75rem;
+    }
+    .sbs-hero-title {
+        font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+        color: var(--chalk);
+        margin-bottom: 1.25rem;
+    }
+    .sbs-hero-sub {
+        color: var(--chalk-dim);
+        font-size: 1.08rem;
+        max-width: 46ch;
+    }
+    .sbs-btn-outline {
+        border: 1.5px solid var(--chalk-dim);
+        color: var(--chalk) !important;
+        background: transparent;
+        border-radius: 6px;
+        font-weight: 600;
+    }
+    .sbs-btn-outline:hover { border-color: var(--line-lime); color: var(--line-lime) !important; }
+    .sbs-btn-outline-dark {
+        border: 1.5px solid var(--pitch-black);
+        color: var(--pitch-black) !important;
+        background: transparent;
+        border-radius: 6px;
+        font-weight: 600;
+    }
+    .sbs-btn-outline-dark:hover { background: var(--pitch-black); color: var(--chalk) !important; }
+
+    /* ---------- 3D ring carousel (signature element) ---------- */
+    .sbs-ring-stage {
+        perspective: 1300px;
+        height: 340px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .sbs-ring-tilt {
+        width: 100%; height: 100%;
+        transform-style: preserve-3d;
+        transition: transform .3s ease-out;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .sbs-ring {
+        position: relative;
+        width: 190px; height: 190px;
+        transform-style: preserve-3d;
+        animation: sbs-spin 22s linear infinite;
+    }
+    .sbs-ring-stage:hover .sbs-ring { animation-play-state: paused; }
+    @@keyframes sbs-spin {
+        from { transform: rotateY(0deg); }
+        to   { transform: rotateY(360deg); }
+    }
+    .sbs-ring-card {
+        position: absolute; inset: 0;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem;
+        background: linear-gradient(160deg, var(--pitch-green-soft), var(--pitch-black));
+        border: 1px solid rgba(212,255,63,0.35);
+        border-radius: 16px;
+        color: var(--chalk);
+        font-family: var(--font-mono);
+        font-size: .95rem;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        box-shadow: 0 0 30px rgba(0,0,0,0.35);
+        transform: rotateY(calc(var(--i) * 72deg)) translateZ(230px);
+        backface-visibility: hidden;
+    }
+    .sbs-ring-icon { width: 44px; height: 44px; color: var(--line-lime); }
+    .sbs-ring-icon svg { width: 100%; height: 100%; }
+
+    /* ---------- Scoreboard stats ---------- */
+    .sbs-stats {
+        background: var(--pitch-black);
+        padding: 2.5rem 0;
+        border-top: 1px solid rgba(212,255,63,0.25);
+        border-bottom: 1px solid rgba(212,255,63,0.25);
+    }
+    .sbs-stat-num {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 2.1rem;
+        color: var(--line-lime);
+    }
+    .sbs-stat-label {
+        color: var(--chalk-dim);
+        font-size: .82rem;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+    }
+
+    /* ---------- Sections ---------- */
+    .sbs-section { padding: 4.5rem 0; }
+    .sbs-section-title { font-size: 2.1rem; margin-bottom: .5rem; }
+    .sbs-on-dark { color: var(--chalk); }
+
+    .sbs-step {
+        background: #fff;
+        border: 1px solid #e6e6e0;
+        border-radius: 14px;
+        padding: 2rem 1.5rem;
+        height: 100%;
+        position: relative;
+    }
+    .sbs-step-num {
+        font-family: var(--font-mono);
+        color: var(--track-amber);
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+    .sbs-step-title { margin: .5rem 0 .5rem; font-size: 1.5rem; }
+
+    /* ---------- Sports grid (pitch strip) ---------- */
+    .sbs-pitch-section {
+        background:
+            repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 2px, transparent 2px 120px),
+            linear-gradient(180deg, var(--pitch-green) 0%, var(--pitch-black) 100%);
+        padding: 4.5rem 0;
+    }
+    .col-lg-2-4 { flex: 0 0 auto; width: 20%; }
+    @@media (max-width: 991px) { .col-lg-2-4 { width: 33.333%; } }
+    @@media (max-width: 575px) { .col-lg-2-4 { width: 50%; } }
+
+    .sport-card {
+        display: flex; flex-direction: column; align-items: center; gap: .75rem;
+        background: rgba(245,247,241,0.05);
+        border: 1px solid rgba(212,255,63,0.25);
+        border-radius: 14px;
+        padding: 1.75rem 1rem;
+        text-decoration: none;
+        color: var(--chalk);
+        transition: transform .25s ease, background .25s ease, box-shadow .25s ease;
+        transform-style: preserve-3d;
+    }
+    .sport-card:hover {
+        transform: perspective(700px) rotateX(6deg) rotateY(-6deg) translateY(-6px);
+        background: rgba(212,255,63,0.08);
+        box-shadow: 0 14px 30px rgba(0,0,0,0.35);
+        color: var(--line-lime);
+    }
+    .sport-card-icon { width: 40px; height: 40px; }
+    .sport-card-icon svg { width: 100%; height: 100%; }
+    .sport-card-name { font-weight: 600; font-size: .95rem; }
+
+    /* ---------- CTA banners ---------- */
+    .sbs-cta {
+        border-radius: 16px;
+        padding: 2.25rem;
+        height: 100%;
+    }
+    .sbs-cta h3 { font-family: var(--font-display); font-size: 1.7rem; margin-bottom: .5rem; }
+    .sbs-cta-lime { background: var(--line-lime); color: var(--pitch-black); }
+    .sbs-cta-dark { background: var(--pitch-black); color: var(--chalk); }
+    .sbs-cta-dark p { color: var(--chalk-dim); }
+
+    /* ---------- Scroll reveal ---------- */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in-view { opacity: 1; transform: translateY(0); }
+</style>
+
+@section Scripts {
+    <script>
+        (function () {
+            // Mouse-parallax tilt on the hero 3D ring
+            var stage = document.querySelector('.sbs-ring-stage');
+            var tilt = document.querySelector('.sbs-ring-tilt');
+            if (stage && tilt) {
+                stage.addEventListener('mousemove', function (e) {
+                    var rect = stage.getBoundingClientRect();
+                    var y = (e.clientY - rect.top) / rect.height - 0.5;
+                    tilt.style.transform = 'rotateX(' + (-y * 14).toFixed(2) + 'deg)';
+                });
+                stage.addEventListener('mouseleave', function () {
+                    tilt.style.transform = 'rotateX(0deg)';
+                });
+            }
+
+            // Scroll-reveal
+            var revealEls = document.querySelectorAll('.reveal');
+            if ('IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('in-view');
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.15 });
+                revealEls.forEach(function (el) { io.observe(el); });
+            } else {
+                revealEls.forEach(function (el) { el.classList.add('in-view'); });
+            }
+        })();
+    </script>
+}

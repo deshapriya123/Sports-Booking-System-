@@ -1,0 +1,215 @@
+﻿@model SportsBookingSystem.Models.BookingCreateViewModel
+@{
+    ViewData["Title"] = "Book Facility";
+}
+
+<!-- ============ COMPACT HERO ============ -->
+<section class="sbs-book-hero">
+    <div class="sbs-auth-glow"></div>
+    <div class="container-xl position-relative">
+        <a asp-controller="Facility" asp-action="Details" asp-route-id="@Model.FacilityID" class="sbs-back-link">&larr; Back to Facility</a>
+        <p class="sbs-eyebrow">Book Facility</p>
+        <h1 class="sbs-book-title">@Model.FacilityName</h1>
+        <p class="sbs-book-sub">@Model.SportName &middot; @Model.Location</p>
+    </div>
+</section>
+
+<!-- ============ FORM ============ -->
+<section class="sbs-book-content">
+    <div class="container-xl">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="sbs-panel">
+                    <form asp-action="Create" method="post" novalidate>
+                        <div asp-validation-summary="All" class="sbs-alert sbs-alert-error"></div>
+                        <input type="hidden" asp-for="FacilityID" />
+                        <input type="hidden" asp-for="FacilityName" />
+                        <input type="hidden" asp-for="SportName" />
+                        <input type="hidden" asp-for="Location" />
+
+                        <div class="sbs-field-dark">
+                            <label asp-for="BookingDate" class="sbs-label-dark"></label>
+                            <input asp-for="BookingDate" type="date" class="sbs-input-dark" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                            <span asp-validation-for="BookingDate" class="sbs-field-error-dark"></span>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6 sbs-field-dark">
+                                <label asp-for="StartTime" class="sbs-label-dark"></label>
+                                <input asp-for="StartTime" type="time" class="sbs-input-dark" />
+                                <span asp-validation-for="StartTime" class="sbs-field-error-dark"></span>
+                            </div>
+                            <div class="col-md-6 sbs-field-dark">
+                                <label asp-for="EndTime" class="sbs-label-dark"></label>
+                                <input asp-for="EndTime" type="time" class="sbs-input-dark" />
+                                <span asp-validation-for="EndTime" class="sbs-field-error-dark"></span>
+                            </div>
+                        </div>
+
+                        <div class="sbs-book-note">
+                            <svg viewBox="0 0 24 24" fill="none" class="sbs-note-icon"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" /><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+                            We'll automatically check for scheduling conflicts before confirming your booking.
+                        </div>
+
+                        <div class="sbs-book-actions">
+                            <button type="submit" class="btn sbs-btn-accent sbs-btn-block">Confirm Booking</button>
+                            <a asp-controller="Facility" asp-action="Details" asp-route-id="@Model.FacilityID" class="sbs-cancel-link">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .sbs-book-hero {
+        position: relative;
+        background: radial-gradient(ellipse at 20% 20%, var(--pitch-green-soft) 0%, var(--pitch-black) 70%);
+        padding: 2.5rem 0 3rem;
+        overflow: hidden;
+    }
+
+    .sbs-back-link {
+        color: var(--chalk-dim);
+        text-decoration: none;
+        font-size: .88rem;
+        display: inline-block;
+        margin-bottom: 1.25rem;
+        position: relative;
+        z-index: 1;
+    }
+
+        .sbs-back-link:hover {
+            color: var(--line-lime);
+        }
+
+    .sbs-book-title {
+        color: var(--chalk);
+        font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+        margin: 0 0 .3rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .sbs-book-sub {
+        color: var(--chalk-dim);
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .sbs-book-content {
+        background: var(--chalk);
+        padding: 3rem 0 5rem;
+    }
+
+    .sbs-panel {
+        background: #fff;
+        border: 1px solid #e6e6e0;
+        border-radius: 16px;
+        padding: 2.25rem;
+    }
+
+    .sbs-field-dark {
+        margin-bottom: 1.25rem;
+    }
+
+    .sbs-label-dark {
+        display: block;
+        color: #6b7570;
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        margin-bottom: .4rem;
+        font-family: var(--font-mono);
+    }
+
+    .sbs-input-dark {
+        width: 100%;
+        background: #f7f8f5;
+        border: 1px solid #d8ddd6;
+        border-radius: 8px;
+        padding: .7rem .9rem;
+        color: var(--ink);
+        font-size: .95rem;
+    }
+
+        .sbs-input-dark:focus {
+            outline: none;
+            border-color: var(--pitch-green-soft);
+            box-shadow: 0 0 0 3px rgba(18,56,50,0.12);
+        }
+
+    .sbs-field-error-dark {
+        color: #c04a2a;
+        font-size: .8rem;
+        display: block;
+        margin-top: .3rem;
+    }
+
+    .sbs-book-note {
+        display: flex;
+        align-items: flex-start;
+        gap: .6rem;
+        background: #eef4ee;
+        border-radius: 10px;
+        padding: .85rem 1rem;
+        color: #4a6b00;
+        font-size: .86rem;
+        line-height: 1.4;
+        margin: .5rem 0 1.5rem;
+    }
+
+    .sbs-note-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .sbs-book-actions {
+        display: flex;
+        flex-direction: column;
+        gap: .9rem;
+        align-items: center;
+    }
+
+    .sbs-btn-block {
+        width: 100%;
+        padding: .8rem;
+        font-size: 1.02rem;
+    }
+
+    .sbs-cancel-link {
+        color: #8a938d;
+        font-size: .9rem;
+        text-decoration: none;
+    }
+
+        .sbs-cancel-link:hover {
+            color: #444;
+            text-decoration: underline;
+        }
+
+    .sbs-alert {
+        border-radius: 8px;
+        padding: .7rem 1rem;
+        font-size: .9rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .sbs-alert-error {
+        background: rgba(255,122,61,0.1);
+        color: #b35418;
+        border: 1px solid rgba(255,122,61,0.3);
+    }
+
+        .sbs-alert-error:empty {
+            display: none;
+        }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

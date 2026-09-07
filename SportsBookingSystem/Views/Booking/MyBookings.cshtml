@@ -1,0 +1,307 @@
+﻿@model List<SportsBookingSystem.Models.Booking>
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<!-- ============ HERO ============ -->
+<section class="sbs-mybookings-hero">
+    <div class="sbs-auth-glow"></div>
+    <div class="container-xl position-relative">
+        <p class="sbs-eyebrow">Your Reservations</p>
+        <h1 class="sbs-mb-title">My Bookings</h1>
+    </div>
+</section>
+
+<!-- ============ CONTENT ============ -->
+<section class="sbs-mybookings-content">
+    <div class="container-xl">
+        @if (TempData["Success"] != null)
+        {
+            <div class="sbs-alert sbs-alert-success">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="sbs-alert sbs-alert-error">@TempData["Error"]</div>
+        }
+
+        @if (!Model.Any())
+        {
+            <div class="sbs-empty">
+                <p>You have no bookings yet.</p>
+                <a asp-controller="Facility" asp-action="Search" class="btn sbs-btn-accent">Find a Facility</a>
+            </div>
+        }
+        else
+        {
+            <div class="sbs-booking-list">
+                @foreach (var booking in Model)
+                {
+                    var statusClass = booking.Status switch
+                    {
+                        "Confirmed" => "sbs-status-confirmed",
+                        "Pending" => "sbs-status-pending",
+                        "Cancelled" => "sbs-status-cancelled",
+                        "Completed" => "sbs-status-completed",
+                        _ => ""
+                    };
+                    <div class="sbs-booking-row">
+                        <div class="sbs-booking-icon">@Html.Raw(GetSportIcon(booking.Facility?.Sport?.SportName))</div>
+
+                        <div class="sbs-booking-info">
+                            <div class="sbs-booking-name">@booking.Facility?.FacilityName</div>
+                            <div class="sbs-booking-sport">@booking.Facility?.Sport?.SportName</div>
+                        </div>
+
+                        <div class="sbs-booking-datetime">
+                            <div class="sbs-booking-date">@booking.BookingDate.ToString("dd MMM yyyy")</div>
+                            <div class="sbs-booking-time">@booking.StartTime &ndash; @booking.EndTime</div>
+                        </div>
+
+                        <div class="sbs-booking-status">
+                            <span class="sbs-status-pill @statusClass">@booking.Status</span>
+                        </div>
+
+                        <div class="sbs-booking-actions">
+                            @if (booking.Status == "Confirmed" && booking.BookingDate.Date >= DateTime.Today)
+                            {
+                                <form asp-action="Cancel" asp-route-id="@booking.BookingID" method="post"
+                                      onsubmit="return confirm('Cancel this booking?');">
+                                    <button type="submit" class="sbs-action-btn sbs-action-cancel">Cancel</button>
+                                </form>
+                            }
+                            @if (booking.Status == "Completed" && booking.Review == null)
+                            {
+                                <a asp-controller="Review" asp-action="Create" asp-route-bookingId="@booking.BookingID" class="sbs-action-btn sbs-action-review">Leave Review</a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@functions {
+    string GetSportIcon(string? sportName)
+    {
+        return (sportName ?? "").ToLower() switch
+        {
+            "tennis" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M8 12c6 4 6 20 0 24M40 12c-6 4-6 20 0 24' stroke='currentColor' stroke-width='2.5'/></svg>",
+            "basketball" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M24 5v38M5 24h38M10 10c9 6 9 22 0 28M38 10c-9 6-9 22 0 28' stroke='currentColor' stroke-width='2.5'/></svg>",
+            "football" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M24 13l7 5-3 8h-8l-3-8 7-5zM24 13V6M31 18l6-3M31 26l5 4M17 18l-6-3M17 26l-5 4M20 26l-3 7M28 26l3 7' stroke='currentColor' stroke-width='2'/></svg>",
+            "badminton" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><ellipse cx='24' cy='12' rx='6' ry='5' stroke='currentColor' stroke-width='2.5'/><path d='M19 15l-9 24M24 16v25M29 15l9 24M16 33h16' stroke='currentColor' stroke-width='2.5'/></svg>",
+            "swimming" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 18c4-4 8 4 12 0s8-4 12 0 8 4 12 0M6 28c4-4 8 4 12 0s8-4 12 0 8 4 12 0M6 38c4-4 8 4 12 0s8-4 12 0 8 4 12 0' stroke='currentColor' stroke-width='2.5' stroke-linecap='round'/></svg>",
+            _ => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/></svg>"
+        };
+    }
+}
+
+<style>
+    .sbs-mybookings-hero {
+        position: relative;
+        background: radial-gradient(ellipse at 20% 20%, var(--pitch-green-soft) 0%, var(--pitch-black) 70%);
+        padding: 2.5rem 0 3rem;
+        overflow: hidden;
+    }
+
+    .sbs-mb-title {
+        color: var(--chalk);
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .sbs-mybookings-content {
+        background: var(--chalk);
+        padding: 2.5rem 0 5rem;
+    }
+
+    .sbs-alert {
+        border-radius: 8px;
+        padding: .8rem 1.1rem;
+        font-size: .92rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .sbs-alert-success {
+        background: rgba(212,255,63,0.16);
+        color: #4a6b00;
+        border: 1px solid rgba(212,255,63,0.4);
+    }
+
+    .sbs-alert-error {
+        background: rgba(255,122,61,0.12);
+        color: #b35418;
+        border: 1px solid rgba(255,122,61,0.3);
+    }
+
+    .sbs-empty {
+        background: #fff;
+        border: 1px dashed #d5dcd6;
+        border-radius: 12px;
+        padding: 3.5rem;
+        text-align: center;
+        color: #6b7570;
+    }
+
+        .sbs-empty p {
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+        }
+
+    .sbs-booking-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .sbs-booking-row {
+        background: #fff;
+        border: 1px solid #e6e6e0;
+        border-radius: 14px;
+        padding: 1.25rem 1.5rem;
+        display: grid;
+        grid-template-columns: 52px 1.8fr 1.2fr auto auto;
+        align-items: center;
+        gap: 1.25rem;
+        transition: box-shadow .2s ease, border-color .2s ease;
+    }
+
+        .sbs-booking-row:hover {
+            box-shadow: 0 8px 22px rgba(11,31,27,0.08);
+            border-color: #d5e6a8;
+        }
+
+    .sbs-booking-icon {
+        width: 44px;
+        height: 44px;
+        color: var(--pitch-green-soft);
+        background: #eef4ee;
+        border-radius: 10px;
+        padding: 8px;
+    }
+
+        .sbs-booking-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+    .sbs-booking-name {
+        font-weight: 700;
+        font-size: 1.02rem;
+    }
+
+    .sbs-booking-sport {
+        color: #8a938d;
+        font-size: .84rem;
+    }
+
+    .sbs-booking-date {
+        font-weight: 600;
+        font-size: .92rem;
+    }
+
+    .sbs-booking-time {
+        color: #8a938d;
+        font-size: .84rem;
+        font-family: var(--font-mono);
+    }
+
+    .sbs-status-pill {
+        font-family: var(--font-mono);
+        font-size: .72rem;
+        text-transform: uppercase;
+        padding: .3rem .7rem;
+        border-radius: 999px;
+        letter-spacing: .04em;
+        white-space: nowrap;
+    }
+
+    .sbs-status-confirmed {
+        background: rgba(212,255,63,0.25);
+        color: #4a6b00;
+    }
+
+    .sbs-status-pending {
+        background: rgba(255,122,61,0.18);
+        color: #b35418;
+    }
+
+    .sbs-status-cancelled {
+        background: #e8e8e4;
+        color: #6b7570;
+    }
+
+    .sbs-status-completed {
+        background: rgba(47,168,224,0.16);
+        color: #1c7aa8;
+    }
+
+    .sbs-booking-actions {
+        display: flex;
+        gap: .5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .sbs-action-btn {
+        font-size: .82rem;
+        font-weight: 700;
+        padding: .4rem .85rem;
+        border-radius: 8px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .sbs-action-cancel {
+        background: transparent;
+        border: 1px solid #e0a184;
+        color: #b35418;
+    }
+
+        .sbs-action-cancel:hover {
+            background: #fff2eb;
+        }
+
+    .sbs-action-review {
+        background: var(--line-lime);
+        color: var(--pitch-black);
+    }
+
+        .sbs-action-review:hover {
+            background: #c2ec2e;
+            color: var(--pitch-black);
+        }
+
+    @@media (max-width: 900px) {
+        .sbs-booking-row {
+            grid-template-columns: 44px 1fr;
+            grid-template-areas: "icon info" "date date" "status status" "actions actions";
+            row-gap: .6rem;
+        }
+
+        .sbs-booking-icon {
+            grid-area: icon;
+        }
+
+        .sbs-booking-info {
+            grid-area: info;
+        }
+
+        .sbs-booking-datetime {
+            grid-area: date;
+        }
+
+        .sbs-booking-status {
+            grid-area: status;
+        }
+
+        .sbs-booking-actions {
+            grid-area: actions;
+            justify-content: flex-start;
+        }
+    }
+</style>

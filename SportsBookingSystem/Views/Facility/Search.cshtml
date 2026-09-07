@@ -1,0 +1,404 @@
+﻿@model SportsBookingSystem.Models.FacilitySearchViewModel
+@{
+    ViewData["Title"] = "Find a Facility";
+}
+
+<!-- ============ FILTER HERO ============ -->
+<section class="sbs-search-hero">
+    <div class="sbs-auth-glow"></div>
+    <div class="container-xl position-relative">
+        <p class="sbs-eyebrow">Facility Search</p>
+        <h1 class="sbs-search-title">Find Your Court.</h1>
+        <p class="sbs-search-sub">Open to everyone &mdash; no account needed to search or browse.</p>
+
+        <form asp-action="Search" method="get" class="sbs-filter-form">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5 sbs-field">
+                    <label class="sbs-label">Keyword</label>
+                    <input type="text" name="keyword" value="@Model.Keyword" class="sbs-input" placeholder="Facility name or description" />
+                </div>
+                <div class="col-md-4 sbs-field">
+                    <label class="sbs-label">Location</label>
+                    <input type="text" name="location" value="@Model.Location" class="sbs-input" placeholder="e.g. Colombo" />
+                </div>
+                <div class="col-md-3 sbs-field">
+                    <label class="sbs-switch">
+                        <input type="checkbox" name="availableOnly" value="true" @(Model.AvailableOnly ? "checked" : "") />
+                        <span class="sbs-switch-track"><span class="sbs-switch-thumb"></span></span>
+                        <span class="sbs-switch-label">Available only</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="sbs-field mt-3">
+                <label class="sbs-label">Sport</label>
+                <div class="sbs-chip-group">
+                    <input type="radio" name="sportId" value="" id="sport_all" class="sbs-chip-input" @(Model.SportId == null ? "checked" : "") />
+                    <label for="sport_all" class="sbs-chip">All Sports</label>
+                    @if (Model.Sports != null)
+                    {
+                        foreach (var sport in Model.Sports)
+                        {
+                            <input type="radio" name="sportId" value="@sport.SportID" id="sport_@sport.SportID"
+                                   class="sbs-chip-input" @(Model.SportId == sport.SportID ? "checked" : "") />
+                            <label for="sport_@sport.SportID" class="sbs-chip">@sport.SportName</label>
+                        }
+                    }
+                </div>
+            </div>
+
+            <button type="submit" class="btn sbs-btn-accent sbs-search-btn">Search Facilities</button>
+        </form>
+    </div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section class="sbs-results-section">
+    <div class="container-xl">
+        <p class="sbs-results-count">@Model.Results.Count facility(ies) found</p>
+
+        @if (!Model.Results.Any())
+        {
+            <div class="sbs-empty">
+                <p>No facilities matched your search. Try widening your filters.</p>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var facility in Model.Results)
+                {
+                    var statusClass = facility.Status == "Available" ? "sbs-status-available"
+                                       : facility.Status == "Maintenance" ? "sbs-status-maintenance" : "sbs-status-closed";
+                    <div class="col-md-6 col-lg-4">
+                        <a asp-action="Details" asp-route-id="@facility.FacilityID" class="sbs-facility-card">
+                            <div class="sbs-facility-top">
+                                <span class="sbs-facility-icon">@Html.Raw(GetSportIcon(facility.Sport?.SportName))</span>
+                                <span class="sbs-status-pill @statusClass">@facility.Status</span>
+                            </div>
+                            <h3 class="sbs-facility-name">@facility.FacilityName</h3>
+                            <p class="sbs-facility-sport">@facility.Sport?.SportName</p>
+                            <p class="sbs-facility-location">
+                                <svg class="sbs-pin" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.58 7-13A7 7 0 1 0 5 9c0 5.42 7 13 7 13Z" stroke="currentColor" stroke-width="1.6" /><circle cx="12" cy="9" r="2.4" stroke="currentColor" stroke-width="1.6" /></svg>
+                                @facility.Location
+                            </p>
+                            @if (facility.Capacity.HasValue)
+                            {
+                                <p class="sbs-facility-capacity">Capacity: @facility.Capacity</p>
+                            }
+                            <span class="sbs-facility-cta">View Details &rarr;</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@functions {
+    string GetSportIcon(string? sportName)
+    {
+        return (sportName ?? "").ToLower() switch
+        {
+            "tennis" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M8 12c6 4 6 20 0 24M40 12c-6 4-6 20 0 24' stroke='currentColor' stroke-width='2.5'/></svg>",
+            "basketball" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M24 5v38M5 24h38M10 10c9 6 9 22 0 28M38 10c-9 6-9 22 0 28' stroke='currentColor' stroke-width='2.5'/></svg>",
+            "football" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M24 13l7 5-3 8h-8l-3-8 7-5zM24 13V6M31 18l6-3M31 26l5 4M17 18l-6-3M17 26l-5 4M20 26l-3 7M28 26l3 7' stroke='currentColor' stroke-width='2'/></svg>",
+            "badminton" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><ellipse cx='24' cy='12' rx='6' ry='5' stroke='currentColor' stroke-width='2.5'/><path d='M19 15l-9 24M24 16v25M29 15l9 24M16 33h16' stroke='currentColor' stroke-width='2.5'/></svg>",
+            "swimming" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 18c4-4 8 4 12 0s8-4 12 0 8 4 12 0M6 28c4-4 8 4 12 0s8-4 12 0 8 4 12 0M6 38c4-4 8 4 12 0s8-4 12 0 8 4 12 0' stroke='currentColor' stroke-width='2.5' stroke-linecap='round'/></svg>",
+            _ => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/></svg>"
+        };
+    }
+}
+
+<style>
+    /* ---------- Filter hero ---------- */
+    .sbs-search-hero {
+        position: relative;
+        background: radial-gradient(ellipse at 20% 20%, var(--pitch-green-soft) 0%, var(--pitch-black) 70%);
+        padding: 3.5rem 0 3rem;
+        overflow: hidden;
+    }
+
+    .sbs-search-title {
+        color: var(--chalk);
+        font-size: clamp(2.2rem, 4vw, 3rem);
+        margin-bottom: .4rem;
+    }
+
+    .sbs-search-sub {
+        color: var(--chalk-dim);
+        margin-bottom: 2rem;
+    }
+
+    .sbs-filter-form {
+        position: relative;
+        z-index: 1;
+    }
+
+    .sbs-field {
+        margin-bottom: 0;
+    }
+
+    .sbs-label {
+        display: block;
+        color: var(--chalk-dim);
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        margin-bottom: .4rem;
+        font-family: var(--font-mono);
+    }
+
+    .sbs-input {
+        width: 100%;
+        background: rgba(245,247,241,0.06);
+        border: 1px solid rgba(245,247,241,0.18);
+        border-radius: 8px;
+        padding: .7rem .9rem;
+        color: var(--chalk);
+        font-size: .95rem;
+    }
+
+        .sbs-input::placeholder {
+            color: rgba(199,210,204,0.45);
+        }
+
+        .sbs-input:focus {
+            outline: none;
+            border-color: var(--line-lime);
+            box-shadow: 0 0 0 3px rgba(212,255,63,0.18);
+        }
+
+    /* Toggle switch */
+    .sbs-switch {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        cursor: pointer;
+        height: 100%;
+        padding-bottom: .1rem;
+    }
+
+        .sbs-switch input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .sbs-switch-track {
+        width: 40px;
+        height: 22px;
+        border-radius: 999px;
+        background: rgba(245,247,241,0.15);
+        position: relative;
+        transition: background .2s ease;
+        flex-shrink: 0;
+    }
+
+    .sbs-switch-thumb {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--chalk-dim);
+        transition: transform .2s ease, background .2s ease;
+    }
+
+    .sbs-switch input:checked + .sbs-switch-track {
+        background: rgba(212,255,63,0.35);
+    }
+
+        .sbs-switch input:checked + .sbs-switch-track .sbs-switch-thumb {
+            transform: translateX(18px);
+            background: var(--line-lime);
+        }
+
+    .sbs-switch-label {
+        color: var(--chalk-dim);
+        font-size: .9rem;
+    }
+
+    /* Sport chips (single-select) */
+    .sbs-chip-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .6rem;
+    }
+
+    .sbs-chip-input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .sbs-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: .45rem 1rem;
+        border: 1px solid rgba(245,247,241,0.22);
+        border-radius: 999px;
+        color: var(--chalk-dim);
+        font-size: .85rem;
+        cursor: pointer;
+        transition: all .15s ease;
+        user-select: none;
+    }
+
+        .sbs-chip:hover {
+            border-color: rgba(212,255,63,0.5);
+            color: var(--chalk);
+        }
+
+    .sbs-chip-input:checked + .sbs-chip {
+        background: var(--line-lime);
+        border-color: var(--line-lime);
+        color: var(--pitch-black);
+        font-weight: 700;
+    }
+
+    .sbs-chip-input:focus-visible + .sbs-chip {
+        outline: 2px solid var(--line-lime);
+        outline-offset: 2px;
+    }
+
+    .sbs-search-btn {
+        padding: .75rem 2rem;
+        margin-top: 1.5rem;
+    }
+
+    /* ---------- Results ---------- */
+    .sbs-results-section {
+        background: var(--chalk);
+        padding: 3rem 0 5rem;
+    }
+
+    .sbs-results-count {
+        font-family: var(--font-mono);
+        color: #6b7570;
+        font-size: .85rem;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        margin-bottom: 1.5rem;
+    }
+
+    .sbs-empty {
+        background: #fff;
+        border: 1px dashed #d5dcd6;
+        border-radius: 12px;
+        padding: 3rem;
+        text-align: center;
+        color: #6b7570;
+    }
+
+    .sbs-facility-card {
+        display: block;
+        background: #fff;
+        border: 1px solid #e6e6e0;
+        border-radius: 16px;
+        padding: 1.5rem;
+        height: 100%;
+        text-decoration: none;
+        color: var(--ink);
+        transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+        .sbs-facility-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 32px rgba(11,31,27,0.12);
+            border-color: var(--line-lime);
+            color: var(--ink);
+        }
+
+    .sbs-facility-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .sbs-facility-icon {
+        width: 44px;
+        height: 44px;
+        color: var(--pitch-green-soft);
+        background: #eef4ee;
+        border-radius: 10px;
+        padding: 8px;
+    }
+
+        .sbs-facility-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+    .sbs-status-pill {
+        font-family: var(--font-mono);
+        font-size: .72rem;
+        text-transform: uppercase;
+        padding: .25rem .6rem;
+        border-radius: 999px;
+        letter-spacing: .04em;
+        height: fit-content;
+    }
+
+    .sbs-status-available {
+        background: rgba(212,255,63,0.25);
+        color: #4a6b00;
+    }
+
+    .sbs-status-maintenance {
+        background: rgba(255,122,61,0.18);
+        color: #b35418;
+    }
+
+    .sbs-status-closed {
+        background: #e8e8e4;
+        color: #6b7570;
+    }
+
+    .sbs-facility-name {
+        font-size: 1.3rem;
+        margin-bottom: .15rem;
+        text-transform: none;
+        letter-spacing: 0;
+    }
+
+    .sbs-facility-sport {
+        color: #6b7570;
+        font-size: .85rem;
+        margin-bottom: .75rem;
+    }
+
+    .sbs-facility-location {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .88rem;
+        color: #444;
+        margin-bottom: .3rem;
+    }
+
+    .sbs-pin {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+        color: #8a938d;
+    }
+
+    .sbs-facility-capacity {
+        font-size: .82rem;
+        color: #8a938d;
+        margin-bottom: .75rem;
+    }
+
+    .sbs-facility-cta {
+        display: inline-block;
+        margin-top: .5rem;
+        font-weight: 700;
+        font-size: .88rem;
+        color: var(--pitch-green-soft);
+    }
+</style>

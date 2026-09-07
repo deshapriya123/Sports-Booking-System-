@@ -1,0 +1,233 @@
+﻿@model SportsBookingSystem.Models.ReviewCreateViewModel
+@{
+    ViewData["Title"] = "Leave a Review";
+}
+
+<!-- ============ COMPACT HERO ============ -->
+<section class="sbs-review-hero">
+    <div class="sbs-auth-glow"></div>
+    <div class="container-xl position-relative">
+        <a asp-controller="Booking" asp-action="MyBookings" class="sbs-back-link">&larr; Back to My Bookings</a>
+        <p class="sbs-eyebrow">Leave a Review</p>
+        <h1 class="sbs-review-title">@Model.FacilityName</h1>
+        <p class="sbs-review-sub">@Model.SportName &middot; Visited @Model.BookingDate.ToString("dd MMM yyyy")</p>
+    </div>
+</section>
+
+<!-- ============ FORM ============ -->
+<section class="sbs-review-content">
+    <div class="container-xl">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="sbs-panel">
+                    <form asp-action="Create" method="post" novalidate>
+                        <div asp-validation-summary="All" class="sbs-alert sbs-alert-error"></div>
+                        <input type="hidden" asp-for="BookingID" />
+                        <input type="hidden" asp-for="FacilityName" />
+                        <input type="hidden" asp-for="SportName" />
+                        <input type="hidden" asp-for="BookingDate" />
+
+                        <div class="sbs-field-dark">
+                            <label class="sbs-label-dark">Your Rating</label>
+                            <div class="sbs-star-input">
+                                <input type="radio" name="Rating" id="star5" value="5" />
+                                <label for="star5" title="5 stars">&#9733;</label>
+                                <input type="radio" name="Rating" id="star4" value="4" />
+                                <label for="star4" title="4 stars">&#9733;</label>
+                                <input type="radio" name="Rating" id="star3" value="3" />
+                                <label for="star3" title="3 stars">&#9733;</label>
+                                <input type="radio" name="Rating" id="star2" value="2" />
+                                <label for="star2" title="2 stars">&#9733;</label>
+                                <input type="radio" name="Rating" id="star1" value="1" />
+                                <label for="star1" title="1 star">&#9733;</label>
+                            </div>
+                            <span asp-validation-for="Rating" class="sbs-field-error-dark"></span>
+                        </div>
+
+                        <div class="sbs-field-dark">
+                            <label asp-for="Comment" class="sbs-label-dark">Your Review (optional)</label>
+                            <textarea asp-for="Comment" class="sbs-input-dark sbs-textarea" rows="5" placeholder="Share what you liked, or what could be better..."></textarea>
+                            <span asp-validation-for="Comment" class="sbs-field-error-dark"></span>
+                        </div>
+
+                        <div class="sbs-review-actions">
+                            <button type="submit" class="btn sbs-btn-accent sbs-btn-block">Submit Review</button>
+                            <a asp-controller="Booking" asp-action="MyBookings" class="sbs-cancel-link">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .sbs-review-hero {
+        position: relative;
+        background: radial-gradient(ellipse at 20% 20%, var(--pitch-green-soft) 0%, var(--pitch-black) 70%);
+        padding: 2.5rem 0 3rem;
+        overflow: hidden;
+    }
+
+    .sbs-back-link {
+        color: var(--chalk-dim);
+        text-decoration: none;
+        font-size: .88rem;
+        display: inline-block;
+        margin-bottom: 1.25rem;
+        position: relative;
+        z-index: 1;
+    }
+
+        .sbs-back-link:hover {
+            color: var(--line-lime);
+        }
+
+    .sbs-review-title {
+        color: var(--chalk);
+        font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+        margin: 0 0 .3rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .sbs-review-sub {
+        color: var(--chalk-dim);
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .sbs-review-content {
+        background: var(--chalk);
+        padding: 3rem 0 5rem;
+    }
+
+    .sbs-panel {
+        background: #fff;
+        border: 1px solid #e6e6e0;
+        border-radius: 16px;
+        padding: 2.25rem;
+    }
+
+    .sbs-field-dark {
+        margin-bottom: 1.5rem;
+    }
+
+    .sbs-label-dark {
+        display: block;
+        color: #6b7570;
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        margin-bottom: .6rem;
+        font-family: var(--font-mono);
+    }
+
+    .sbs-input-dark {
+        width: 100%;
+        background: #f7f8f5;
+        border: 1px solid #d8ddd6;
+        border-radius: 8px;
+        padding: .7rem .9rem;
+        color: var(--ink);
+        font-size: .95rem;
+        font-family: var(--font-body);
+    }
+
+        .sbs-input-dark:focus {
+            outline: none;
+            border-color: var(--pitch-green-soft);
+            box-shadow: 0 0 0 3px rgba(18,56,50,0.12);
+        }
+
+    .sbs-textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .sbs-field-error-dark {
+        color: #c04a2a;
+        font-size: .8rem;
+        display: block;
+        margin-top: .4rem;
+    }
+
+    /* Interactive star rating (pure CSS, reverse-order radio trick) */
+    .sbs-star-input {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        gap: .25rem;
+        font-size: 2.4rem;
+    }
+
+        .sbs-star-input input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .sbs-star-input label {
+            color: #e0e0da;
+            cursor: pointer;
+            transition: color .15s ease, transform .15s ease;
+            line-height: 1;
+        }
+
+            .sbs-star-input label:hover,
+            .sbs-star-input label:hover ~ label {
+                color: #f0d84a;
+                transform: scale(1.08);
+            }
+
+        .sbs-star-input input:checked ~ label {
+            color: var(--track-amber);
+        }
+
+    .sbs-review-actions {
+        display: flex;
+        flex-direction: column;
+        gap: .9rem;
+        align-items: center;
+    }
+
+    .sbs-btn-block {
+        width: 100%;
+        padding: .8rem;
+        font-size: 1.02rem;
+    }
+
+    .sbs-cancel-link {
+        color: #8a938d;
+        font-size: .9rem;
+        text-decoration: none;
+    }
+
+        .sbs-cancel-link:hover {
+            color: #444;
+            text-decoration: underline;
+        }
+
+    .sbs-alert {
+        border-radius: 8px;
+        padding: .7rem 1rem;
+        font-size: .9rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .sbs-alert-error {
+        background: rgba(255,122,61,0.1);
+        color: #b35418;
+        border: 1px solid rgba(255,122,61,0.3);
+    }
+
+        .sbs-alert-error:empty {
+            display: none;
+        }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

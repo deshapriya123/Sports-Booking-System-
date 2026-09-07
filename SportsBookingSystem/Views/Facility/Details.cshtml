@@ -1,0 +1,408 @@
+﻿@model SportsBookingSystem.Models.Facility
+@{
+    ViewData["Title"] = Model.FacilityName;
+    bool isLoggedIn = Context.Session.GetInt32("MemberID") != null;
+    double avgRating = Model.Reviews.Any() ? Model.Reviews.Average(r => r.Rating) : 0;
+    int roundedRating = (int)Math.Round(avgRating);
+    var statusClass = Model.Status == "Available" ? "sbs-status-available"
+                       : Model.Status == "Maintenance" ? "sbs-status-maintenance" : "sbs-status-closed";
+}
+
+<!-- ============ DETAIL HERO ============ -->
+<section class="sbs-detail-hero">
+    <div class="sbs-auth-glow"></div>
+    <div class="container-xl position-relative">
+        <a asp-action="Search" class="sbs-back-link">&larr; Back to Search</a>
+
+        <div class="sbs-detail-top">
+            <span class="sbs-detail-icon">@Html.Raw(GetSportIcon(Model.Sport?.SportName))</span>
+            <div>
+                <p class="sbs-eyebrow">@Model.Sport?.SportName</p>
+                <h1 class="sbs-detail-title">@Model.FacilityName</h1>
+            </div>
+        </div>
+
+        <div class="sbs-detail-meta">
+            <span class="sbs-status-pill @statusClass">@Model.Status</span>
+            <span class="sbs-meta-item">
+                <svg class="sbs-pin" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.58 7-13A7 7 0 1 0 5 9c0 5.42 7 13 7 13Z" stroke="currentColor" stroke-width="1.6" /><circle cx="12" cy="9" r="2.4" stroke="currentColor" stroke-width="1.6" /></svg>
+                @Model.Location
+            </span>
+            @if (Model.Capacity.HasValue)
+            {
+                <span class="sbs-meta-item">Capacity: @Model.Capacity</span>
+            }
+            @if (Model.Reviews.Any())
+            {
+                <span class="sbs-meta-item sbs-stars">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <span class="@(i <= roundedRating ? "sbs-star-filled" : "sbs-star-empty")">&#9733;</span>
+                    }
+                    <span class="sbs-rating-num">@avgRating.ToString("0.0")</span>
+                    <span class="sbs-rating-count">(@Model.Reviews.Count review@(Model.Reviews.Count == 1 ? "" : "s"))</span>
+                </span>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ============ CONTENT ============ -->
+<section class="sbs-detail-content">
+    <div class="container-xl">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                @if (!string.IsNullOrWhiteSpace(Model.Description))
+                {
+                    <div class="sbs-panel">
+                        <h2 class="sbs-panel-title">About This Facility</h2>
+                        <p class="sbs-panel-text">@Model.Description</p>
+                    </div>
+                }
+
+                <div class="sbs-panel">
+                    <h2 class="sbs-panel-title">Reviews</h2>
+
+                    @if (!Model.Reviews.Any())
+                    {
+                        <div class="sbs-empty-reviews">No reviews yet &mdash; be the first to play and review this facility.</div>
+                    }
+                    else
+                    {
+                        @foreach (var review in Model.Reviews.OrderByDescending(r => r.ReviewDate))
+                        {
+                            <div class="sbs-review">
+                                <div class="sbs-review-avatar">@(review.Member?.FirstName?.Substring(0, 1).ToUpper())</div>
+                                <div class="sbs-review-body">
+                                    <div class="sbs-review-head">
+                                        <span class="sbs-review-name">@review.Member?.FirstName @review.Member?.LastName</span>
+                                        <span class="sbs-review-date">@review.ReviewDate.ToString("dd MMM yyyy")</span>
+                                    </div>
+                                    <div class="sbs-review-stars">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <span class="@(i <= review.Rating ? "sbs-star-filled" : "sbs-star-empty")">&#9733;</span>
+                                        }
+                                    </div>
+                                    @if (!string.IsNullOrWhiteSpace(review.Comment))
+                                    {
+                                        <p class="sbs-review-comment">@review.Comment</p>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="sbs-cta-card">
+                    @if (Model.Status != "Available")
+                    {
+                        <p class="sbs-cta-warning">This facility is currently <strong>@Model.Status.ToLower()</strong> and can't be booked right now.</p>
+                    }
+                    else if (isLoggedIn)
+                    {
+                        <h3 class="sbs-cta-card-title">Ready to play?</h3>
+                        <p class="sbs-cta-card-sub">Pick a date and time that works for you.</p>
+                        <a asp-controller="Booking" asp-action="Create" asp-route-facilityId="@Model.FacilityID" class="btn sbs-btn-accent sbs-btn-block">Book This Facility</a>
+                    }
+                    else
+                    {
+                        <h3 class="sbs-cta-card-title">Ready to play?</h3>
+                        <p class="sbs-cta-card-sub">Sign in to reserve your slot &mdash; it only takes a minute.</p>
+                        <a asp-controller="Account" asp-action="Login" class="btn sbs-btn-accent sbs-btn-block">Sign in to Book</a>
+                        <p class="sbs-cta-card-alt">New here? <a asp-controller="Account" asp-action="Register">Create an account</a></p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@functions {
+    string GetSportIcon(string? sportName)
+    {
+        return (sportName ?? "").ToLower() switch
+        {
+            "tennis" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M8 12c6 4 6 20 0 24M40 12c-6 4-6 20 0 24' stroke='currentColor' stroke-width='2.5'/></svg>",
+            "basketball" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M24 5v38M5 24h38M10 10c9 6 9 22 0 28M38 10c-9 6-9 22 0 28' stroke='currentColor' stroke-width='2.5'/></svg>",
+            "football" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/><path d='M24 13l7 5-3 8h-8l-3-8 7-5zM24 13V6M31 18l6-3M31 26l5 4M17 18l-6-3M17 26l-5 4M20 26l-3 7M28 26l3 7' stroke='currentColor' stroke-width='2'/></svg>",
+            "badminton" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><ellipse cx='24' cy='12' rx='6' ry='5' stroke='currentColor' stroke-width='2.5'/><path d='M19 15l-9 24M24 16v25M29 15l9 24M16 33h16' stroke='currentColor' stroke-width='2.5'/></svg>",
+            "swimming" => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 18c4-4 8 4 12 0s8-4 12 0 8 4 12 0M6 28c4-4 8 4 12 0s8-4 12 0 8 4 12 0M6 38c4-4 8 4 12 0s8-4 12 0 8 4 12 0' stroke='currentColor' stroke-width='2.5' stroke-linecap='round'/></svg>",
+            _ => "<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='19' stroke='currentColor' stroke-width='2.5'/></svg>"
+        };
+    }
+}
+
+<style>
+    /* ---------- Hero ---------- */
+    .sbs-detail-hero {
+        position: relative;
+        background: radial-gradient(ellipse at 20% 20%, var(--pitch-green-soft) 0%, var(--pitch-black) 70%);
+        padding: 2.5rem 0 3rem;
+        overflow: hidden;
+    }
+
+    .sbs-back-link {
+        color: var(--chalk-dim);
+        text-decoration: none;
+        font-size: .88rem;
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+        .sbs-back-link:hover {
+            color: var(--line-lime);
+        }
+
+    .sbs-detail-top {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .sbs-detail-icon {
+        width: 64px;
+        height: 64px;
+        flex-shrink: 0;
+        color: var(--line-lime);
+        background: rgba(212,255,63,0.08);
+        border: 1px solid rgba(212,255,63,0.3);
+        border-radius: 14px;
+        padding: 12px;
+    }
+
+        .sbs-detail-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+    .sbs-detail-title {
+        color: var(--chalk);
+        font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+        margin: 0;
+    }
+
+    .sbs-detail-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.25rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .sbs-meta-item {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        color: var(--chalk-dim);
+        font-size: .92rem;
+    }
+
+    .sbs-pin {
+        width: 15px;
+        height: 15px;
+    }
+
+    .sbs-status-pill {
+        font-family: var(--font-mono);
+        font-size: .72rem;
+        text-transform: uppercase;
+        padding: .3rem .7rem;
+        border-radius: 999px;
+        letter-spacing: .04em;
+    }
+
+    .sbs-status-available {
+        background: rgba(212,255,63,0.25);
+        color: #c8f13a;
+    }
+
+    .sbs-status-maintenance {
+        background: rgba(255,122,61,0.22);
+        color: #ff9c6a;
+    }
+
+    .sbs-status-closed {
+        background: rgba(245,247,241,0.15);
+        color: var(--chalk-dim);
+    }
+
+    .sbs-stars {
+        gap: .15rem;
+    }
+
+    .sbs-star-filled {
+        color: var(--line-lime);
+    }
+
+    .sbs-star-empty {
+        color: rgba(245,247,241,0.25);
+    }
+
+    .sbs-rating-num {
+        color: var(--chalk);
+        font-weight: 700;
+        margin-left: .35rem;
+    }
+
+    .sbs-rating-count {
+        color: var(--chalk-dim);
+        font-size: .85rem;
+    }
+
+    /* ---------- Content ---------- */
+    .sbs-detail-content {
+        background: var(--chalk);
+        padding: 3rem 0 5rem;
+    }
+
+    .sbs-panel {
+        background: #fff;
+        border: 1px solid #e6e6e0;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .sbs-panel-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        text-transform: none;
+        letter-spacing: 0;
+    }
+
+    .sbs-panel-text {
+        color: #444;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .sbs-empty-reviews {
+        color: #8a938d;
+        font-style: italic;
+    }
+
+    .sbs-review {
+        display: flex;
+        gap: 1rem;
+        padding: 1.25rem 0;
+        border-bottom: 1px solid #eee;
+    }
+
+        .sbs-review:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .sbs-review-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: var(--pitch-green-soft);
+        color: var(--line-lime);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    .sbs-review-body {
+        flex: 1;
+    }
+
+    .sbs-review-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: .5rem;
+    }
+
+    .sbs-review-name {
+        font-weight: 700;
+    }
+
+    .sbs-review-date {
+        color: #8a938d;
+        font-size: .82rem;
+    }
+
+    .sbs-review-stars {
+        font-size: .85rem;
+        margin: .25rem 0 .5rem;
+    }
+
+        .sbs-review-stars .sbs-star-filled {
+            color: #d9c400;
+        }
+
+        .sbs-review-stars .sbs-star-empty {
+            color: #e0e0da;
+        }
+
+    .sbs-review-comment {
+        color: #444;
+        margin: 0;
+        line-height: 1.55;
+    }
+
+    /* Booking CTA card */
+    .sbs-cta-card {
+        background: linear-gradient(160deg, var(--pitch-green-soft), var(--pitch-black));
+        border-radius: 16px;
+        padding: 2rem;
+        position: sticky;
+        top: 90px;
+        border: 1px solid rgba(212,255,63,0.25);
+    }
+
+    .sbs-cta-card-title {
+        color: var(--chalk);
+        font-size: 1.5rem;
+        margin-bottom: .5rem;
+    }
+
+    .sbs-cta-card-sub {
+        color: var(--chalk-dim);
+        font-size: .92rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .sbs-cta-card-alt {
+        color: var(--chalk-dim);
+        font-size: .85rem;
+        text-align: center;
+        margin: 1rem 0 0;
+    }
+
+        .sbs-cta-card-alt a {
+            color: var(--line-lime);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+    .sbs-cta-warning {
+        color: #ffb088;
+        font-size: .92rem;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .sbs-btn-block {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: .8rem;
+    }
+</style>

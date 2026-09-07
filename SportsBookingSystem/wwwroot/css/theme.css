@@ -1,0 +1,131 @@
+﻿/* ==========================================================================
+   SportsBooking Theme — "Floodlit Pitch" design system
+   ========================================================================== */
+
+:root {
+    --pitch-black: #0B1F1B;
+    --pitch-green: #123832;
+    --pitch-green-soft: #164740;
+    --line-lime: #D4FF3F;
+    --track-amber: #FF7A3D;
+    --court-blue: #2FA8E0;
+    --chalk: #F5F7F1;
+    --chalk-dim: #C7D2CC;
+    --ink: #0B1F1B;
+    --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'Space Mono', monospace;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--chalk);
+}
+
+h1, h2, h3, .sbs-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+/* ---------------- Navbar ---------------- */
+.sbs-navbar {
+    background: var(--pitch-black);
+    border-bottom: 3px solid var(--line-lime);
+    padding-top: .65rem;
+    padding-bottom: .65rem;
+}
+
+.sbs-brand {
+    display: flex;
+    align-items: baseline;
+    gap: .5rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--chalk) !important;
+}
+
+.sbs-brand-mark {
+    background: var(--line-lime);
+    color: var(--pitch-black);
+    padding: 0.05em 0.4em;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.sbs-navbar .nav-link {
+    color: var(--chalk-dim) !important;
+    font-weight: 600;
+    font-size: .92rem;
+    padding-left: .85rem;
+    padding-right: .85rem;
+    transition: color .15s ease;
+}
+
+    .sbs-navbar .nav-link:hover {
+        color: var(--line-lime) !important;
+    }
+
+.sbs-hi {
+    color: var(--line-lime) !important;
+    font-weight: 700;
+}
+
+.sbs-btn-accent {
+    background: var(--line-lime);
+    color: var(--pitch-black) !important;
+    font-weight: 700;
+    border: none;
+    border-radius: 6px;
+    padding: .4rem 1rem;
+}
+
+    .sbs-btn-accent:hover {
+        background: #c2ec2e;
+        color: var(--pitch-black);
+    }
+
+.sbs-btn-ghost {
+    background: transparent;
+    color: var(--chalk-dim);
+    border: 1px solid rgba(245,247,241,0.25);
+    border-radius: 6px;
+}
+
+    .sbs-btn-ghost:hover {
+        border-color: var(--line-lime);
+        color: var(--line-lime);
+    }
+
+/* ---------------- Footer ---------------- */
+.sbs-footer {
+    background: var(--pitch-black);
+    color: var(--chalk-dim);
+    font-size: .9rem;
+    margin-top: 4rem;
+}
+
+.sbs-footer-links a {
+    color: var(--chalk-dim);
+    text-decoration: none;
+    margin-left: 1.25rem;
+}
+
+    .sbs-footer-links a:hover {
+        color: var(--line-lime);
+    }
+
+.sbs-page {
+    min-height: 60vh;
+}
+
+/* Respect reduced motion globally */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

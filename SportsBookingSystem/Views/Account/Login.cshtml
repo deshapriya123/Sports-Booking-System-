@@ -1,0 +1,323 @@
+﻿@model SportsBookingSystem.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Sign In";
+}
+
+<div class="sbs-auth">
+    <div class="sbs-auth-glow"></div>
+    <div class="sbs-auth-orb sbs-orb-1"></div>
+    <div class="sbs-auth-orb sbs-orb-2"></div>
+
+    <div class="sbs-auth-wrap">
+        <div class="row g-0 sbs-auth-card">
+
+            <!-- Left panel: brand / message -->
+            <div class="col-lg-5 sbs-auth-side">
+                <div class="sbs-auth-side-inner">
+                    <span class="sbs-brand-mark sbs-auth-mark">SBS</span>
+                    <h2 class="sbs-auth-side-title">Welcome<br />Back.</h2>
+                    <p class="sbs-auth-side-sub">
+                        Sign in to book your next court, track your reservations,
+                        and pick up right where you left off.
+                    </p>
+                    <div class="sbs-auth-ring">
+                        <div class="sbs-auth-ball"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right panel: form -->
+            <div class="col-lg-7 sbs-auth-form-panel">
+                <div class="sbs-auth-form-inner">
+                    <p class="sbs-eyebrow">Member Sign In</p>
+                    <h1 class="sbs-auth-title">Sign In</h1>
+
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="sbs-alert sbs-alert-success">@TempData["Success"]</div>
+                    }
+
+                    <form asp-action="Login" method="post" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="sbs-alert sbs-alert-error"></div>
+
+                        <div class="sbs-field">
+                            <label asp-for="Email" class="sbs-label"></label>
+                            <input asp-for="Email" class="sbs-input" placeholder="you@example.com" autocomplete="email" />
+                            <span asp-validation-for="Email" class="sbs-field-error"></span>
+                        </div>
+
+                        <div class="sbs-field">
+                            <label asp-for="Password" class="sbs-label"></label>
+                            <input asp-for="Password" class="sbs-input" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password" />
+                            <span asp-validation-for="Password" class="sbs-field-error"></span>
+                        </div>
+
+                        <button type="submit" class="btn sbs-btn-accent sbs-btn-block">Sign In</button>
+
+                        <p class="sbs-auth-switch">
+                            New to SportsBooking? <a asp-action="Register">Create an account</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .sbs-auth {
+        position: relative;
+        min-height: calc(100vh - 250px);
+        background: radial-gradient(ellipse at 25% 25%, var(--pitch-green-soft) 0%, var(--pitch-black) 70%);
+        display: flex;
+        align-items: center;
+        padding: 3.5rem 1rem;
+        overflow: hidden;
+    }
+
+    .sbs-auth-glow {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 80% 20%, rgba(212,255,63,0.14), transparent 40%);
+        pointer-events: none;
+    }
+
+    .sbs-auth-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        pointer-events: none;
+        animation: sbs-float 9s ease-in-out infinite;
+    }
+
+    .sbs-orb-1 {
+        width: 260px;
+        height: 260px;
+        background: rgba(47,168,224,0.18);
+        top: -60px;
+        right: 8%;
+    }
+
+    .sbs-orb-2 {
+        width: 200px;
+        height: 200px;
+        background: rgba(255,122,61,0.14);
+        bottom: -40px;
+        left: 6%;
+        animation-delay: -4s;
+    }
+
+    @@keyframes sbs-float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-24px);
+        }
+    }
+
+    .sbs-auth-wrap {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 980px;
+        margin: 0 auto;
+    }
+
+    .sbs-auth-card {
+        background: rgba(11, 31, 27, 0.55);
+        border: 1px solid rgba(212,255,63,0.2);
+        border-radius: 20px;
+        overflow: hidden;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+    }
+
+    /* Left brand panel */
+    .sbs-auth-side {
+        background: linear-gradient(160deg, var(--pitch-green-soft), var(--pitch-black));
+        padding: 3rem 2.25rem;
+        display: flex;
+        position: relative;
+    }
+
+    .sbs-auth-side-inner {
+        position: relative;
+        z-index: 1;
+    }
+
+    .sbs-auth-mark {
+        font-size: 1.1rem;
+        display: inline-block;
+        margin-bottom: 2rem;
+    }
+
+    .sbs-auth-side-title {
+        color: var(--chalk);
+        font-size: 2.6rem;
+        margin-bottom: 1rem;
+    }
+
+    .sbs-auth-side-sub {
+        color: var(--chalk-dim);
+        font-size: .98rem;
+        max-width: 30ch;
+    }
+
+    .sbs-auth-ring {
+        position: absolute;
+        right: -30px;
+        bottom: -30px;
+        width: 190px;
+        height: 190px;
+        border: 1.5px dashed rgba(212,255,63,0.35);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: sbs-spin-slow 16s linear infinite;
+    }
+
+    @@keyframes sbs-spin-slow {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .sbs-auth-ball {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--line-lime);
+        box-shadow: 0 0 24px rgba(212,255,63,0.6);
+        position: relative;
+        top: -95px;
+    }
+
+    /* Right form panel */
+    .sbs-auth-form-panel {
+        background: rgba(245,247,241,0.03);
+        padding: 3rem 2.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .sbs-auth-form-inner {
+        width: 100%;
+    }
+
+    .sbs-auth-title {
+        color: var(--chalk);
+        font-size: 2.3rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .sbs-field {
+        margin-bottom: 1.25rem;
+    }
+
+    .sbs-label {
+        display: block;
+        color: var(--chalk-dim);
+        font-size: .8rem;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        margin-bottom: .4rem;
+        font-family: var(--font-mono);
+    }
+
+    .sbs-input {
+        width: 100%;
+        background: rgba(245,247,241,0.06);
+        border: 1px solid rgba(245,247,241,0.18);
+        border-radius: 8px;
+        padding: .75rem .9rem;
+        color: var(--chalk);
+        font-size: .98rem;
+        transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+        .sbs-input::placeholder {
+            color: rgba(199,210,204,0.45);
+        }
+
+        .sbs-input:focus {
+            outline: none;
+            border-color: var(--line-lime);
+            box-shadow: 0 0 0 3px rgba(212,255,63,0.18);
+        }
+
+    .sbs-field-error {
+        color: var(--track-amber);
+        font-size: .82rem;
+        display: block;
+        margin-top: .3rem;
+    }
+
+    .sbs-btn-block {
+        width: 100%;
+        padding: .8rem;
+        font-size: 1.02rem;
+        margin-top: .5rem;
+    }
+
+    .sbs-alert {
+        border-radius: 8px;
+        padding: .7rem 1rem;
+        font-size: .9rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .sbs-alert-success {
+        background: rgba(212,255,63,0.14);
+        color: var(--line-lime);
+        border: 1px solid rgba(212,255,63,0.3);
+    }
+
+    .sbs-alert-error {
+        background: rgba(255,122,61,0.12);
+        color: var(--track-amber);
+        border: 1px solid rgba(255,122,61,0.3);
+    }
+
+        .sbs-alert-error:empty {
+            display: none;
+        }
+
+    .sbs-auth-switch {
+        color: var(--chalk-dim);
+        font-size: .92rem;
+        margin-top: 1.5rem;
+        text-align: center;
+    }
+
+        .sbs-auth-switch a {
+            color: var(--line-lime);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+            .sbs-auth-switch a:hover {
+                text-decoration: underline;
+            }
+
+    @@media (max-width: 991px) {
+        .sbs-auth-ring {
+            display: none;
+        }
+
+        .sbs-auth-side {
+            padding: 2.5rem;
+        }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
