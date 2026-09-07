@@ -1,2 +1,5 @@
 # Sports-Booking-System-
-Community Sports Facilities Booking System
+
+Community sports centers typically manage a small number of shared facilities — tennis courts, basketball arenas, football grounds, badminton halls, and swimming pools — across a large and constantly changing group of members. Without a centralized booking system, double-bookings, unclear availability, and no accountability for cancellations are common problems. Members also have no easy way to discover which facilities are worth visiting, since reviews and ratings, if collected at all, are not shared publicly.
+This coursework addresses that gap by specifying and building a Community Sports Facilities Booking System: a case-study web application that lets a sports facility operator publish a catalogue of bookable facilities, lets registered members reserve time slots against that catalogue with the system itself preventing scheduling conflicts, and lets both members and the general public (guests) browse the catalogue, read reviews, and get in touch via an inquiry form.
+
